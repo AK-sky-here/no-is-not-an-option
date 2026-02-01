@@ -46,6 +46,7 @@
       display: flex;
       gap: 20px;
       justify-content: center;
+      transition: all 0.3s ease;
     }
 
     button {
@@ -64,7 +65,7 @@
 
     #no {
       background: #ccc;
-      transition: left 0.15s ease, top 0.15s ease;
+      transition: left 0.15s ease, top 0.15s ease, opacity 0.2s ease;
     }
 
     /* Yes screen */
@@ -91,10 +92,10 @@
 <body>
 
   <h1>I have one question for you 💖</h1>
-  <p class="subtitle">Take a second. Choose wisely.</p>
+  <p class="subtitle">Be honest. Or at least try.</p>
 
   <div class="card">
-    <div class="button-row">
+    <div class="button-row" id="buttonRow">
       <button id="yes">Yes</button>
       <button id="no">No</button>
     </div>
@@ -102,22 +103,21 @@
 
   <div id="loveScreen">
     <h1>You said YES 💕</h1>
-    <p>The universe seems very pleased.</p>
-    <img src="giphy.gif" alt="Mind blown">
+    <p>The universe approves this decision.</p>
+    <img src="assets/mindblown.gif" alt="Mind blown">
   </div>
 
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
+    const buttonRow = document.getElementById("buttonRow");
     const loveScreen = document.getElementById("loveScreen");
 
     let escaped = false;
 
-    function moveNoButton(event) {
-      event.preventDefault();
-
+    // Desktop: No runs away
+    function moveNoDesktop() {
       if (!escaped) {
-        // Capture current position before switching to fixed
         const rect = noBtn.getBoundingClientRect();
         noBtn.style.position = "fixed";
         noBtn.style.left = rect.left + "px";
@@ -129,19 +129,25 @@
       const maxX = window.innerWidth - noBtn.offsetWidth - padding;
       const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-      const x = Math.random() * maxX;
-      const y = Math.random() * maxY;
-
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
+      noBtn.style.left = Math.random() * maxX + "px";
+      noBtn.style.top = Math.random() * maxY + "px";
     }
 
-    // Desktop
-    noBtn.addEventListener("mouseenter", moveNoButton);
+    // Mobile: No disappears
+    function removeNoMobile(e) {
+      e.preventDefault();
+      noBtn.style.opacity = "0";
+      noBtn.style.pointerEvents = "none";
 
-    // Mobile
-    noBtn.addEventListener("touchstart", moveNoButton);
-    noBtn.addEventListener("touchmove", moveNoButton);
+      setTimeout(() => {
+        noBtn.remove();
+        buttonRow.style.justifyContent = "center";
+      }, 200);
+    }
+
+    // Events
+    noBtn.addEventListener("mouseenter", moveNoDesktop);
+    noBtn.addEventListener("touchstart", removeNoMobile);
 
     // Yes click
     yesBtn.addEventListener("click", () => {
