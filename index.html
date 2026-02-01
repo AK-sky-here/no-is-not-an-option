@@ -11,7 +11,12 @@
       height: 100vh;
       overflow: hidden;
       font-family: system-ui, -apple-system, Arial, sans-serif;
-      background: #ffe6eb;
+      background: radial-gradient(
+        circle at top,
+        #fff1f4,
+        #ffd6de,
+        #ffc0cb
+      );
       display: flex;
       justify-content: center;
       align-items: center;
@@ -20,17 +25,39 @@
     }
 
     h1 {
-      margin-bottom: 24px;
+      margin-bottom: 10px;
+      animation: breathe 3s ease-in-out infinite;
     }
 
-    /* Button row (initial state) */
+    @keyframes breathe {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.02); }
+      100% { transform: scale(1); }
+    }
+
+    .subtitle {
+      margin-bottom: 30px;
+      font-size: 16px;
+      opacity: 0.75;
+    }
+
+    /* Card */
+    .card {
+      background: rgba(255, 255, 255, 0.35);
+      backdrop-filter: blur(10px);
+      padding: 32px 42px;
+      border-radius: 26px;
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+    }
+
     .button-row {
       display: flex;
       gap: 20px;
+      justify-content: center;
     }
 
     button {
-      padding: 14px 28px;
+      padding: 14px 30px;
       font-size: 18px;
       border: none;
       border-radius: 999px;
@@ -40,7 +67,13 @@
     #yes {
       background: #ff4d6d;
       color: white;
-      box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
+      animation: yesPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes yesPulse {
+      0% { box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4); }
+      50% { box-shadow: 0 15px 40px rgba(255, 77, 109, 0.6); }
+      100% { box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4); }
     }
 
     #no {
@@ -62,30 +95,49 @@
       text-align: center;
     }
 
-    #loveScreen h1 {
-      margin-bottom: 10px;
-    }
-
     #loveScreen img {
       width: 260px;
       margin-top: 20px;
-      border-radius: 14px;
+      border-radius: 16px;
+    }
+
+    /* Floating hearts */
+    .heart {
+      position: fixed;
+      bottom: -20px;
+      font-size: 18px;
+      opacity: 0.4;
+      animation: floatUp 6s linear infinite;
+    }
+
+    @keyframes floatUp {
+      from {
+        transform: translateY(0);
+        opacity: 0.4;
+      }
+      to {
+        transform: translateY(-120vh);
+        opacity: 0;
+      }
     }
   </style>
 </head>
 <body>
 
-  <h1>Will you be my Valentine? 💖</h1>
+  <h1>I have one question for you 💖</h1>
+  <p class="subtitle">Take a second. Choose wisely.</p>
 
-  <div class="button-row">
-    <button id="yes">Yes</button>
-    <button id="no">No</button>
+  <div class="card">
+    <div class="button-row">
+      <button id="yes">Yes</button>
+      <button id="no">No</button>
+    </div>
   </div>
 
   <div id="loveScreen">
     <h1>You said YES 💕</h1>
-    <p>And that honestly made my day.</p>
-    <img src="giphy.gif" alt="Love gif">
+    <p>The universe seems very happy about this.</p>
+    <img src="assets/mindblown.gif" alt="Mind blown">
   </div>
 
   <script>
@@ -112,17 +164,24 @@
       noBtn.style.top = y + "px";
     }
 
-    // Desktop
     noBtn.addEventListener("mouseenter", moveNoButton);
-
-    // Mobile
     noBtn.addEventListener("touchstart", moveNoButton);
     noBtn.addEventListener("touchmove", moveNoButton);
 
-    // Yes click
     yesBtn.addEventListener("click", () => {
       loveScreen.style.display = "flex";
     });
+
+    // Floating hearts (gentle)
+    setInterval(() => {
+      const heart = document.createElement("div");
+      heart.className = "heart";
+      heart.textContent = "💖";
+      heart.style.left = Math.random() * 100 + "vw";
+      document.body.appendChild(heart);
+
+      setTimeout(() => heart.remove(), 6000);
+    }, 1800);
   </script>
 
 </body>
