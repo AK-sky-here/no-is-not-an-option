@@ -26,13 +26,6 @@
 
     h1 {
       margin-bottom: 10px;
-      animation: breathe 3s ease-in-out infinite;
-    }
-
-    @keyframes breathe {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.02); }
-      100% { transform: scale(1); }
     }
 
     .subtitle {
@@ -41,7 +34,6 @@
       opacity: 0.75;
     }
 
-    /* Card */
     .card {
       background: rgba(255, 255, 255, 0.35);
       backdrop-filter: blur(10px);
@@ -67,13 +59,7 @@
     #yes {
       background: #ff4d6d;
       color: white;
-      animation: yesPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes yesPulse {
-      0% { box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4); }
-      50% { box-shadow: 0 15px 40px rgba(255, 77, 109, 0.6); }
-      100% { box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4); }
+      box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
     }
 
     #no {
@@ -100,26 +86,6 @@
       margin-top: 20px;
       border-radius: 16px;
     }
-
-    /* Floating hearts */
-    .heart {
-      position: fixed;
-      bottom: -20px;
-      font-size: 18px;
-      opacity: 0.4;
-      animation: floatUp 6s linear infinite;
-    }
-
-    @keyframes floatUp {
-      from {
-        transform: translateY(0);
-        opacity: 0.4;
-      }
-      to {
-        transform: translateY(-120vh);
-        opacity: 0;
-      }
-    }
   </style>
 </head>
 <body>
@@ -136,8 +102,8 @@
 
   <div id="loveScreen">
     <h1>You said YES 💕</h1>
-    <p>The universe seems very happy about this.</p>
-    <img src="assets/mindblown.gif" alt="Mind blown">
+    <p>The universe seems very pleased.</p>
+    <img src="giphy.gif" alt="Mind blown">
   </div>
 
   <script>
@@ -147,41 +113,40 @@
 
     let escaped = false;
 
-    function moveNoButton() {
+    function moveNoButton(event) {
+      event.preventDefault();
+
       if (!escaped) {
-        escaped = true;
+        // Capture current position before switching to fixed
+        const rect = noBtn.getBoundingClientRect();
         noBtn.style.position = "fixed";
+        noBtn.style.left = rect.left + "px";
+        noBtn.style.top = rect.top + "px";
+        escaped = true;
       }
 
-      const padding = 20;
+      const padding = 16;
       const maxX = window.innerWidth - noBtn.offsetWidth - padding;
       const maxY = window.innerHeight - noBtn.offsetHeight - padding;
 
-      const x = Math.random() * maxX + padding;
-      const y = Math.random() * maxY + padding;
+      const x = Math.random() * maxX;
+      const y = Math.random() * maxY;
 
       noBtn.style.left = x + "px";
       noBtn.style.top = y + "px";
     }
 
+    // Desktop
     noBtn.addEventListener("mouseenter", moveNoButton);
+
+    // Mobile
     noBtn.addEventListener("touchstart", moveNoButton);
     noBtn.addEventListener("touchmove", moveNoButton);
 
+    // Yes click
     yesBtn.addEventListener("click", () => {
       loveScreen.style.display = "flex";
     });
-
-    // Floating hearts (gentle)
-    setInterval(() => {
-      const heart = document.createElement("div");
-      heart.className = "heart";
-      heart.textContent = "💖";
-      heart.style.left = Math.random() * 100 + "vw";
-      document.body.appendChild(heart);
-
-      setTimeout(() => heart.remove(), 6000);
-    }, 1800);
   </script>
 
 </body>
