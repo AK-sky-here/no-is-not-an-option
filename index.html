@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Just One Question</title>
+  <title>Solo una pregunta</title>
 
   <style>
     body {
@@ -11,12 +11,7 @@
       height: 100vh;
       overflow: hidden;
       font-family: system-ui, -apple-system, Arial, sans-serif;
-      background: radial-gradient(
-        circle at top,
-        #fff1f4,
-        #ffd6de,
-        #ffc0cb
-      );
+      background: #ffe6eb;
       display: flex;
       justify-content: center;
       align-items: center;
@@ -25,36 +20,21 @@
     }
 
     h1 {
-      margin-bottom: 10px;
-    }
-
-    .subtitle {
-      margin-bottom: 30px;
-      font-size: 16px;
-      opacity: 0.75;
-    }
-
-    .card {
-      background: rgba(255, 255, 255, 0.35);
-      backdrop-filter: blur(10px);
-      padding: 32px 42px;
-      border-radius: 26px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.08);
+      margin-bottom: 24px;
     }
 
     .button-row {
       display: flex;
       gap: 20px;
-      justify-content: center;
-      transition: all 0.3s ease;
     }
 
     button {
-      padding: 14px 30px;
+      padding: 14px 28px;
       font-size: 18px;
       border: none;
       border-radius: 999px;
       cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     #yes {
@@ -65,7 +45,6 @@
 
     #no {
       background: #ccc;
-      transition: left 0.15s ease, top 0.15s ease, opacity 0.2s ease;
     }
 
     /* Yes screen */
@@ -85,71 +64,63 @@
     #loveScreen img {
       width: 260px;
       margin-top: 20px;
-      border-radius: 16px;
+      border-radius: 14px;
     }
   </style>
 </head>
 <body>
 
-  <h1>I have one question for you 💖</h1>
-  <p class="subtitle">Be honest. Or at least try.</p>
+  <h1>¿Quieres ser mi San Valentín? 💖</h1>
 
-  <div class="card">
-    <div class="button-row" id="buttonRow">
-      <button id="yes">Yes</button>
-      <button id="no">No</button>
-    </div>
+  <div class="button-row">
+    <button id="yes">SÍ</button>
+    <button id="no">Nooo</button>
   </div>
 
   <div id="loveScreen">
-    <h1>You said YES 💕</h1>
-    <p>The universe approves this decision.</p>
-    <img src="assets/mindblown.gif" alt="Mind blown">
+    <h1>¡Dijiste que SÍ! 💕</h1>
+    <p>El universo claramente aprobó esta decisión.</p>
+    <img src="giphy.gif" alt="Love gif">
   </div>
 
   <script>
     const noBtn = document.getElementById("no");
     const yesBtn = document.getElementById("yes");
-    const buttonRow = document.getElementById("buttonRow");
     const loveScreen = document.getElementById("loveScreen");
 
-    let escaped = false;
+    const noTexts = [
+      "Nooo",
+      "¿Seguro?",
+      "Piénsalo bien 😌",
+      "Última oportunidad 😅"
+    ];
 
-    // Desktop: No runs away
-    function moveNoDesktop() {
-      if (!escaped) {
-        const rect = noBtn.getBoundingClientRect();
-        noBtn.style.position = "fixed";
-        noBtn.style.left = rect.left + "px";
-        noBtn.style.top = rect.top + "px";
-        escaped = true;
-      }
+    let noIndex = 0;
 
-      const padding = 16;
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-
-      noBtn.style.left = Math.random() * maxX + "px";
-      noBtn.style.top = Math.random() * maxY + "px";
-    }
-
-    // Mobile: No disappears
-    function removeNoMobile(e) {
+    function handleNoInteraction(e) {
       e.preventDefault();
-      noBtn.style.opacity = "0";
-      noBtn.style.pointerEvents = "none";
 
-      setTimeout(() => {
-        noBtn.remove();
-        buttonRow.style.justifyContent = "center";
-      }, 200);
+      noIndex++;
+
+      if (noIndex < noTexts.length) {
+        noBtn.textContent = noTexts[noIndex];
+        noBtn.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          noBtn.style.transform = "scale(1)";
+        }, 150);
+      } else {
+        noBtn.style.opacity = "0";
+        noBtn.style.pointerEvents = "none";
+        setTimeout(() => {
+          noBtn.remove();
+        }, 200);
+      }
     }
 
-    // Events
-    noBtn.addEventListener("mouseenter", moveNoDesktop);
-    noBtn.addEventListener("touchstart", removeNoMobile);
+    // Works for both desktop and mobile
+    noBtn.addEventListener("click", handleNoInteraction);
+    noBtn.addEventListener("touchstart", handleNoInteraction);
 
-    // Yes click
     yesBtn.addEventListener("click", () => {
       loveScreen.style.display = "flex";
     });
