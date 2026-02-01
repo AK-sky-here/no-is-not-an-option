@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Just One Question</title>
+  <title>Só uma pergunta</title>
 
   <style>
     body {
@@ -23,7 +23,6 @@
       margin-bottom: 24px;
     }
 
-    /* Button row (initial state) */
     .button-row {
       display: flex;
       gap: 20px;
@@ -35,6 +34,7 @@
       border: none;
       border-radius: 999px;
       cursor: pointer;
+      transition: opacity 0.2s ease, transform 0.2s ease;
     }
 
     #yes {
@@ -45,7 +45,6 @@
 
     #no {
       background: #ccc;
-      transition: left 0.15s ease, top 0.15s ease;
     }
 
     /* Yes screen */
@@ -62,10 +61,6 @@
       text-align: center;
     }
 
-    #loveScreen h1 {
-      margin-bottom: 10px;
-    }
-
     #loveScreen img {
       width: 260px;
       margin-top: 20px;
@@ -75,16 +70,16 @@
 </head>
 <body>
 
-  <h1>Quer ser meu Valentine? 💖</h1>
+  <h1>Quer ser meu Valentine, meuu bemm? 💖</h1>
 
   <div class="button-row">
-    <button id="yes">Simmm</button>
-    <button id="no">Naooo</button>
+    <button id="yes">SIM</button>
+    <button id="no">Nãaao</button>
   </div>
 
   <div id="loveScreen">
-    <h1>Você disse que SIM 💕</h1>
-    <p>O universo acabou de confirmar isso.</p>
+    <h1>Você disse SIM 💕</h1>
+    <p>O universo claramente aprovou essa decisão.</p>
     <img src="giphy.gif" alt="Love gif">
   </div>
 
@@ -93,33 +88,39 @@
     const yesBtn = document.getElementById("yes");
     const loveScreen = document.getElementById("loveScreen");
 
-    let escaped = false;
+    const noTexts = [
+      "Nãaao",
+      "Tem certeza?",
+      "Pensa direitinho 😌",
+      "Última chance 😅"
+    ];
 
-    function moveNoButton() {
-      if (!escaped) {
-        escaped = true;
-        noBtn.style.position = "fixed";
+    let noIndex = 0;
+
+    function handleNoInteraction(e) {
+      e.preventDefault();
+
+      noIndex++;
+
+      if (noIndex < noTexts.length) {
+        noBtn.textContent = noTexts[noIndex];
+        noBtn.style.transform = "scale(0.95)";
+        setTimeout(() => {
+          noBtn.style.transform = "scale(1)";
+        }, 150);
+      } else {
+        noBtn.style.opacity = "0";
+        noBtn.style.pointerEvents = "none";
+        setTimeout(() => {
+          noBtn.remove();
+        }, 200);
       }
-
-      const padding = 20;
-      const maxX = window.innerWidth - noBtn.offsetWidth - padding;
-      const maxY = window.innerHeight - noBtn.offsetHeight - padding;
-
-      const x = Math.random() * maxX + padding;
-      const y = Math.random() * maxY + padding;
-
-      noBtn.style.left = x + "px";
-      noBtn.style.top = y + "px";
     }
 
-    // Desktop
-    noBtn.addEventListener("mouseenter", moveNoButton);
+    // Works on mobile and desktop
+    noBtn.addEventListener("click", handleNoInteraction);
+    noBtn.addEventListener("touchstart", handleNoInteraction);
 
-    // Mobile
-    noBtn.addEventListener("touchstart", moveNoButton);
-    noBtn.addEventListener("touchmove", moveNoButton);
-
-    // Yes click
     yesBtn.addEventListener("click", () => {
       loveScreen.style.display = "flex";
     });
