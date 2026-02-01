@@ -20,11 +20,16 @@
     }
 
     h1 {
-      margin-bottom: 30px;
+      margin-bottom: 24px;
+    }
+
+    /* Button row (initial state) */
+    .button-row {
+      display: flex;
+      gap: 20px;
     }
 
     button {
-      position: fixed;
       padding: 14px 28px;
       font-size: 18px;
       border: none;
@@ -33,9 +38,6 @@
     }
 
     #yes {
-      left: 50%;
-      bottom: 20%;
-      transform: translateX(-50%);
       background: #ff4d6d;
       color: white;
       box-shadow: 0 10px 30px rgba(255, 77, 109, 0.4);
@@ -43,6 +45,7 @@
 
     #no {
       background: #ccc;
+      transition: left 0.15s ease, top 0.15s ease;
     }
 
     /* Yes screen */
@@ -56,12 +59,17 @@
       flex-direction: column;
       color: white;
       padding: 20px;
+      text-align: center;
+    }
+
+    #loveScreen h1 {
+      margin-bottom: 10px;
     }
 
     #loveScreen img {
-      width: 250px;
+      width: 260px;
       margin-top: 20px;
-      border-radius: 12px;
+      border-radius: 14px;
     }
   </style>
 </head>
@@ -69,12 +77,14 @@
 
   <h1>Will you be my Valentine? 💖</h1>
 
-  <button id="yes">Yes</button>
-  <button id="no">No</button>
+  <div class="button-row">
+    <button id="yes">Yes</button>
+    <button id="no">No</button>
+  </div>
 
   <div id="loveScreen">
     <h1>You said YES 💕</h1>
-    <p>And that honestly made me smile more than you know.</p>
+    <p>And that honestly made my day.</p>
     <img src="https://media.giphy.com/media/l4FGuhL4U2WyjdkaY/giphy.gif" alt="Love gif">
   </div>
 
@@ -83,7 +93,14 @@
     const yesBtn = document.getElementById("yes");
     const loveScreen = document.getElementById("loveScreen");
 
+    let escaped = false;
+
     function moveNoButton() {
+      if (!escaped) {
+        escaped = true;
+        noBtn.style.position = "fixed";
+      }
+
       const padding = 20;
       const maxX = window.innerWidth - noBtn.offsetWidth - padding;
       const maxY = window.innerHeight - noBtn.offsetHeight - padding;
@@ -101,9 +118,6 @@
     // Mobile
     noBtn.addEventListener("touchstart", moveNoButton);
     noBtn.addEventListener("touchmove", moveNoButton);
-
-    // Initial position
-    moveNoButton();
 
     // Yes click
     yesBtn.addEventListener("click", () => {
